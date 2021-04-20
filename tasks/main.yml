@@ -1,0 +1,25 @@
+---
+- name: Setup user .bashrc
+  blockinfile:
+    block: "{{ item.bashrc }}"
+    dest: "{{ item.home | default('/home/' + item.username if item.username != 'root' else '/root') }}/.bashrc"
+    owner: "{{ item.username }}"
+    group: "{{ item.group | default(item.username) }}"
+    mode: 0600
+    create: true
+  when:  
+    - item.bashrc is defined
+  with_items: "{{ users_shell }}"
+
+
+- name: Setup user .zshrc
+  blockinfile:
+    block: "{{ item.zshrc }}"
+    dest: "{{ item.home | default('/home/' + item.username if item.username != 'root' else '/root') }}/.zshrc"
+    owner: "{{ item.username }}"
+    group: "{{ item.group | default(item.username) }}"
+    mode: 0600
+    create: true
+  when:  
+    - item.zshrc is defined
+  with_items: "{{ users_shell }}"
